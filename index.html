@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Winston Work Clock v0.3</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Winston Work Clock v0.4</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#0b1219;color:#f5f7fa;font:16px Arial,sans-serif}main{max-width:680px;margin:auto;padding:16px}
 header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.brand{font-weight:900;color:#ffcd29;letter-spacing:1px}.small{font-size:12px;color:#bac7d1}
@@ -19,8 +19,10 @@ select,input{width:100%;border:1px solid #61717e;border-radius:10px;background:#
 .row{display:flex;align-items:center;justify-content:space-between;gap:10px}.row button{min-height:38px;padding:9px 12px;font-size:12px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.entry{border-top:1px solid #3d4b55;padding:10px 0;font-size:13px;color:#d8e4eb}.note{font-size:12px;line-height:1.5;color:#b1bec9}
 .badge{color:#a7edbb;font-size:12px;font-weight:bold}h2{font-size:17px;margin:0 0 12px}
+
+.activitybuttons{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}.activitybuttons button{font-size:13px;padding:12px 5px}.blue{background:#398bbd;color:#fff}.red{background:#bf4444;color:#fff}.active{outline:3px solid white;outline-offset:-4px}.field{margin-top:10px}textarea{width:100%;min-height:82px;background:#0d1822;color:white;border:1px solid #61717e;border-radius:10px;padding:12px;font:15px Arial}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.stat{background:#192631;border-radius:10px;text-align:center;padding:10px 4px}.stat strong{display:block;font-size:18px;color:#fff}.stat small{font-size:11px;color:#b7c6d0}.report{background:#fff;color:#14212b;padding:16px;border-radius:12px}.report table{border-collapse:collapse;width:100%;font-size:12px}.report td,.report th{border-bottom:1px solid #d5dce2;padding:6px 3px;text-align:left}.report th{background:#eef2f5}.report .muted{color:#536270}.report .totals{font-weight:bold;background:#fff2c8}.report .noteitem{font-size:12px;margin:6px 0}.warning{color:#ffd079}.actionrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}@media print{body{background:white;color:black}header,.scene,.card,.note,.no-print{display:none!important}main{padding:0;max-width:none}#reportCard{display:block!important;border:0;margin:0;padding:0}#reportCard h2{display:none}.report{padding:0} .report table{font-size:10px} }
 </style></head><body><main>
-<header><div class="brand">W / WINSTON WORK CLOCK</div><div class="small">OPERATOR DISPLAY · V0.3</div></header>
+<header><div class="brand">W / WINSTON WORK CLOCK</div><div class="small">OPERATOR DISPLAY · V0.4</div></header>
 <section class="scene"><svg class="scenery" viewBox="0 0 420 580" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
 <defs><linearGradient id="sky" x2="0" y2="1"><stop id="sky1" offset="0%" stop-color="#081324"/><stop id="sky2" offset="55%" stop-color="#182b45"/><stop id="sky3" offset="100%" stop-color="#2c3a53"/></linearGradient></defs>
 <rect width="420" height="580" fill="url(#sky)"/><circle id="sun" cx="330" cy="120" r="23" fill="#f2f2db"/>
@@ -41,69 +43,69 @@ select,input{width:100%;border:1px solid #61717e;border-radius:10px;background:#
 </div>
 <div class="controls"><button class="yellow" id="paidButton" onclick="togglePaid()">START PAID TIME</button><button class="dark" onclick="resetDay()">RESET DEMO</button></div>
 <button class="machinebtn" id="machineButton" onclick="toggleMachine()"><svg viewBox="0 0 100 60" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"><rect x="5" y="45" width="49" height="11" rx="5"/><path d="M12 45V27H45L54 45M24 27V10H41L49 27M52 33L70 8L78 13L60 39M74 11L90 32L83 38L68 20M87 35L94 48L87 52"/></svg><span id="machineButtonText">START MACHINE TIME</span></button>
+<div class="activitybuttons"><button id="travelButton" class="blue" onclick="toggleActivity('travel')">🚚 TRAVEL</button><button id="downtimeButton" class="red" onclick="toggleActivity('downtime')">🔧 DOWNTIME</button><button class="dark" onclick="stopActivity()">■ STOP ACTIVITY</button></div>
+<div id="downtimeEditor" class="card" style="display:none"><label for="downNote">Downtime note — what happened?</label><textarea id="downNote" placeholder="Hydraulic hose failed; waiting for mechanic..." oninput="setDownNote(this.value)"></textarea><div class="note">You can add your note while downtime is running or afterward in the daily records.</div></div>
+<div class="stats"><div class="stat"><strong id="travelTime">00:00:00</strong><small>TRAVEL</small></div><div class="stat"><strong id="downTime">00:00:00</strong><small>DOWNTIME</small></div><div class="stat"><strong id="otherTime">00:00:00</strong><small>OTHER PAID</small></div></div>
 </div></section>
 <section class="card"><h2>Equipment</h2><label for="category">Machine category</label><select id="category" onchange="changeCategory(this.value)">
 <option>Feller Buncher</option><option>Skidder</option><option>Front-End Loader</option><option>Bulldozer</option><option>Excavator</option><option>Processor</option><option>Log Loader</option></select>
 <label for="model" style="margin-top:12px">Machine model (optional)</label><input id="model" placeholder="e.g. CAT 538" maxlength="70" onchange="changeModel(this.value)"></section>
 <section class="card"><h2>Private Pay Settings</h2><div class="grid"><div><label for="rate">Hourly wage (CAD)</label><input id="rate" type="number" min="0" max="1000" step=".01" value="0" onchange="changeRate(this.value)"></div><div><label for="payEnd">Pay period ending</label><input id="payEnd" type="date" value="2026-11-07" onchange="changePayEnd(this.value)"></div></div>
 <p class="note">Earnings are hidden on the dashboard by default. Pay rate is stored only in this browser, not in the public website code. Anyone with access to this device/browser may still inspect stored data.</p></section>
+<section class="card"><h2>Daily Records</h2><div class="note">Each paid shift is recorded by date. Notes can be edited below. Keep paper timesheets as backup while testing.</div><div id="dailyRecords"></div></section>
+<section class="card" id="reportCard"><h2>Payroll Timesheet</h2><div class="no-print"><label for="employee">Employee name</label><input id="employee" placeholder="Your name" onchange="updateEmployee(this.value)"><div class="field"><label for="recipientEmail">Supervisor email (optional)</label><input id="recipientEmail" type="email" placeholder="lawrence@example.com" onchange="updateContact('email',this.value)"></div><div class="field"><label for="recipientPhone">Supervisor phone (optional)</label><input id="recipientPhone" type="tel" placeholder="Phone number" onchange="updateContact('phone',this.value)"></div><p class="note">Review your report before sharing. Hourly wage and earnings are never included. SMS sends a summary; email opens a draft. Use Print / Save PDF for the full report.</p></div><div id="report" class="report"></div><div class="actionrow no-print"><button class="yellow" onclick="window.print()">PRINT / SAVE PDF</button><button class="dark" onclick="shareReport()">SHARE REPORT</button><button class="blue" onclick="emailReport()">EMAIL SUMMARY</button><button class="blue" onclick="smsReport()">TEXT SUMMARY</button></div></section>
 <section class="card"><div class="row"><h2>Activity Log</h2><button class="dark" onclick="exportCSV()">EXPORT CSV</button></div><div id="log" class="small">No activity yet.</div></section>
-<p class="note">Prototype for field testing, not an official payroll record. No GPS or cloud sync yet. Browser data can be lost if storage is cleared. Existing V0.2 timer data is kept separately and is not included in V0.3 totals. Review exported records before sending.</p>
+<p class="note">V0.4 field-test prototype, not an official payroll or safety system. Records stay in this browser only: no cloud sync, GPS or automatic sending. Back up your CSV regularly. Old V0.3 data remains untouched; V0.4 attempts a one-time carryover of today’s V0.3 totals only.</p>
 </main><script>
-const KEY="winston-clock-v3";
-const defaults=()=>({day:new Date().toLocaleDateString("en-CA"),paidStart:null,paidMs:0,machineStart:null,machineMs:0,category:"Processor",model:"CAT 538",rate:0,payEnd:"2026-11-07",events:[]});
-let data;try{data=JSON.parse(localStorage.getItem(KEY))}catch(e){}
-if(!data||typeof data!=="object")data=defaults();
-data={...defaults(),...data};if(!Array.isArray(data.events))data.events=[];
-let reveal=false;
-function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert("Unable to save data. Check browser storage.")}}
-function dayKey(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")}
-function logEvent(kind,at=Date.now()){data.events.push({kind,at,category:data.category,model:data.model});save()}
-function ensureDay(){const now=dayKey();if(data.day===now)return;
- // Close active intervals at local midnight; restart them for the new day.
- let boundary=new Date(now+"T00:00:00").getTime();
- if(data.paidStart){data.paidMs+=Math.max(0,boundary-data.paidStart);data.paidStart=boundary}
- if(data.machineStart){data.machineMs+=Math.max(0,boundary-data.machineStart);data.machineStart=boundary}
- data.day=now;data.paidMs=0;data.machineMs=0;save()}
-function msFor(type){return data[type+"Ms"]+(data[type+"Start"]?Math.max(0,Date.now()-data[type+"Start"]):0)}
-function time(ms){let s=Math.floor(ms/1000);return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(n=>String(n).padStart(2,"0")).join(":")}
-function togglePaid(){ensureDay();let now=Date.now();if(data.paidStart){data.paidMs+=Math.max(0,now-data.paidStart);data.paidStart=null;if(data.machineStart){data.machineMs+=Math.max(0,now-data.machineStart);data.machineStart=null;logEvent("Machine stopped",now)}logEvent("Paid time stopped",now)}
-else{data.paidStart=now;logEvent("Paid time started",now)}save();render()}
-function toggleMachine(){ensureDay();let now=Date.now();if(data.machineStart){data.machineMs+=Math.max(0,now-data.machineStart);data.machineStart=null;logEvent("Machine stopped",now)}
-else{if(!data.paidStart){alert("Start paid time first.");return}data.machineStart=now;logEvent("Machine started",now)}save();render()}
-function resetDay(){if(!confirm("Clear today's V0.3 demo timers? Activity log will be kept."))return;data.paidStart=null;data.paidMs=0;data.machineStart=null;data.machineMs=0;logEvent("Today's demo timers reset");render()}
-function changeCategory(x){data.category=x;data.model="";document.getElementById("model").value="";logEvent("Selected "+x);render()}
-function changeModel(x){data.model=x.trim();logEvent("Model: "+(data.model||"not specified"));render()}
-function changeRate(x){let n=Number(x);if(!Number.isFinite(n)||n<0||n>1000){alert("Enter a valid hourly rate.");render();return}data.rate=n;save();render()}
-function changePayEnd(x){data.payEnd=x;save()}
-function togglePrivacy(){reveal=!reveal;render()}
-function render(){ensureDay();let paid=msFor("paid"),machine=msFor("machine");
-document.getElementById("paidTime").textContent=time(paid);document.getElementById("machineTime").textContent=time(machine);
-document.getElementById("paidArc").setAttribute("stroke-dasharray",Math.min(100,paid/57600000*100)+" 100");
-document.getElementById("machineArc").setAttribute("stroke-dasharray",Math.min(100,machine/57600000*100)+" 100");
-document.getElementById("earnings").textContent=reveal?"$"+(paid/3600000*data.rate).toFixed(2):"••••••";
-document.getElementById("moneyFill").style.width=Math.min(100,paid/3600000*data.rate/600*100)+"%";
-document.getElementById("privacy").textContent=reveal?"HIDE":"SHOW";
-document.getElementById("status").textContent=data.paidStart?"● PAID CLOCK RUNNING":"● CLOCK STOPPED";
-document.getElementById("paidButton").textContent=data.paidStart?"STOP PAID TIME":"START PAID TIME";
-document.getElementById("machineButtonText").textContent=data.machineStart?"STOP MACHINE TIME":"START MACHINE TIME";
-document.getElementById("machineButton").classList.toggle("running",!!data.machineStart);
-document.getElementById("machineName").textContent=data.model||data.category;
-document.getElementById("category").value=data.category;document.getElementById("model").value=data.model;
-if(document.activeElement!==document.getElementById("rate"))document.getElementById("rate").value=data.rate;
-document.getElementById("payEnd").value=data.payEnd;
-const log=document.getElementById("log");log.replaceChildren();
-if(!data.events.length)log.textContent="No activity yet.";
-else data.events.slice(-35).reverse().forEach(e=>{const div=document.createElement("div");div.className="entry";div.textContent=new Date(e.at).toLocaleString()+" · "+e.kind;log.appendChild(div)})}
-function exportCSV(){const rows=[["Timestamp","Activity","Category","Model"],...data.events.map(e=>[new Date(e.at).toISOString(),e.kind,e.category,e.model])];
-const csv=rows.map(row=>row.map(x=>'"'+String(x??"").replaceAll('"','""')+'"').join(",")).join("\r\n");
-const a=document.createElement("a");const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.href=url;a.download="winston-work-clock-activity.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-function sky(){let h=new Date().getHours();let mode=h<5||h>=21?"night":h<9?"dawn":h<17?"day":"dusk";
-let colors={night:["#081324","#182b45","#2c3a53"],dawn:["#1b2747","#ad5b66","#efae65"],day:["#347eaf","#7ab8d8","#d4e7ef"],dusk:["#202846","#a74c61","#e99e60"]}[mode];
-["sky1","sky2","sky3"].forEach((id,i)=>document.getElementById(id).setAttribute("stop-color",colors[i]));
-let y=mode==="dawn"?240:mode==="dusk"?270:110;document.getElementById("sun").setAttribute("cy",y);
-document.getElementById("sun").setAttribute("fill",mode==="night"?"#f2f2db":"#ffe1a0");
-document.getElementById("stars").style.opacity=mode==="night"?"1":"0";
-document.getElementById("lights").style.opacity=mode==="day"?"0":"1"}
-sky();render();setInterval(render,1000);setInterval(sky,60000);
+const KEY='winston-clock-v4', OLD='winston-clock-v3';
+const dateKey=t=>{const d=new Date(t);return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};
+const initial=()=>({paidStart:null,activity:null,activityStart:null,activityNote:'',category:'Processor',model:'CAT 538',rate:0,payEnd:'2026-11-07',employee:'',email:'',phone:'',days:{},events:[],imported:false});
+let data;try{data=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!data||!data.days)data=initial();data={...initial(),...data};
+if(!data.imported){try{const old=JSON.parse(localStorage.getItem(OLD));if(old){data.category=old.category||data.category;data.model=old.model||data.model;data.rate=Number(old.rate)||0;data.payEnd=old.payEnd||data.payEnd;const d=dateKey(Date.now());const today=ensureRecord(d);const now=Date.now();if(old.day===d){today.paid+=(Number(old.paidMs)||0)+ (old.paidStart?Math.max(0,now-old.paidStart):0);today.machine+=(Number(old.machineMs)||0)+(old.machineStart?Math.max(0,now-old.machineStart):0);if(old.paidStart){data.paidStart=now;if(old.machineStart){data.activity='machine';data.activityStart=now}}}data.events.push({at:now,kind:'V0.3 today totals carried over; earlier days unavailable'});}}catch(e){}data.imported=true;save()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert('Could not save. Browser storage may be full. Export a backup.') }}
+function ensureRecord(k){return data.days[k]||(data.days[k]={paid:0,machine:0,travel:0,downtime:0,notes:[]})}
+function allocate(start,end,field,note){if(!start||end<=start)return;let cursor=start;while(cursor<end){const key=dateKey(cursor),tomorrow=new Date(key+'T00:00:00');tomorrow.setDate(tomorrow.getDate()+1);const stop=Math.min(end,tomorrow.getTime()),rec=ensureRecord(key);rec[field]+=(stop-cursor);if(field==='downtime'&&note&&stop>cursor){rec.notes.push({id:cursor+'-'+stop,start:cursor,end:stop,text:note})}cursor=stop}}
+function settle(now=Date.now()){if(data.paidStart){allocate(data.paidStart,now,'paid');data.paidStart=now}if(data.activityStart&&data.activity){allocate(data.activityStart,now,data.activity,data.activity==='downtime'?data.activityNote:'');data.activityStart=now; if(data.activity==='downtime')data.activityNote=''}save()}
+function event(kind){data.events.push({at:Date.now(),kind,category:data.category,model:data.model});if(data.events.length>1500)data.events=data.events.slice(-1500);save()}
+function togglePaid(){const now=Date.now();settle(now);if(data.paidStart){data.paidStart=null;data.activity=null;data.activityStart=null;data.activityNote='';event('Paid time stopped')}else{data.paidStart=now;event('Paid time started')}save();render()}
+function startActivity(type){if(!data.paidStart){alert('Start paid time first.');return}settle();data.activity=type;data.activityStart=Date.now();data.activityNote='';event(type+' started');save();render()}
+function stopActivity(){if(!data.activity)return;const old=data.activity;settle();data.activity=null;data.activityStart=null;data.activityNote='';event(old+' stopped');save();render()}
+function toggleActivity(type){if(data.activity===type)stopActivity();else startActivity(type)}
+function toggleMachine(){toggleActivity('machine')}
+function setDownNote(v){data.activityNote=v;save()}
+function resetDay(){if(!confirm('Reset today’s demo totals? This deletes today’s recorded hours in V0.4. This cannot be undone.'))return;settle();delete data.days[dateKey(Date.now())];if(data.paidStart)data.paidStart=Date.now();if(data.activityStart)data.activityStart=Date.now();event('Demo totals reset for today');render()}
+function changeCategory(v){settle();data.category=v;data.model='';event('Equipment: '+v);render()}
+function changeModel(v){data.model=v.trim();event('Model: '+data.model);render()}
+function changeRate(v){const n=Number(v);if(!Number.isFinite(n)||n<0||n>1000){alert('Invalid rate');return}data.rate=n;save();render()}
+function changePayEnd(v){data.payEnd=v;save();renderReport()}
+function updateEmployee(v){data.employee=v.trim();save();renderReport()}
+function updateContact(k,v){data[k]=v.trim();save()}
+let reveal=false;function togglePrivacy(){reveal=!reveal;render()}
+function fmt(ms){let s=Math.floor(Math.max(0,ms)/1000);return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(v=>String(v).padStart(2,'0')).join(':')}
+function hrs(ms){return (ms/3600000).toFixed(2)}
+function currentTotals(){const k=dateKey(Date.now()),r={...ensureRecord(k)};const now=Date.now();if(data.paidStart&&dateKey(data.paidStart)===k)r.paid+=now-data.paidStart;if(data.activityStart&&data.activity&&dateKey(data.activityStart)===k)r[data.activity]+=now-data.activityStart;return r}
+function updateNote(day,id,v){const n=(data.days[day]?.notes||[]).find(x=>x.id===id);if(n){n.text=v;save();renderReport()}}
+function render(){const now=Date.now();if(data.paidStart&&dateKey(data.paidStart)!==dateKey(now))settle(now);const r=currentTotals();
+for(const [id,field] of [['paidTime','paid'],['machineTime','machine'],['travelTime','travel'],['downTime','downtime']])document.getElementById(id).textContent=fmt(r[field]);
+document.getElementById('otherTime').textContent=fmt(Math.max(0,r.paid-r.machine-r.travel-r.downtime));
+for(const [id,field] of [['paidArc','paid'],['machineArc','machine']])document.getElementById(id).setAttribute('stroke-dasharray',Math.min(100,r[field]/57600000*100)+' 100');
+document.getElementById('earnings').textContent=reveal?'$'+(r.paid/3600000*data.rate).toFixed(2):'••••••';document.getElementById('moneyFill').style.width=Math.min(100,r.paid/3600000*data.rate/600*100)+'%';document.getElementById('privacy').textContent=reveal?'HIDE':'SHOW';
+document.getElementById('status').textContent=data.paidStart?'● PAID CLOCK RUNNING':'● CLOCK STOPPED';document.getElementById('paidButton').textContent=data.paidStart?'STOP PAID TIME':'START PAID TIME';document.getElementById('machineButtonText').textContent=data.activity==='machine'?'STOP MACHINE TIME':'START MACHINE TIME';document.getElementById('machineButton').classList.toggle('running',data.activity==='machine');document.getElementById('machineName').textContent=data.model||data.category;
+for(const [id,type] of [['travelButton','travel'],['downtimeButton','downtime']])document.getElementById(id).classList.toggle('active',data.activity===type);
+document.getElementById('travelButton').textContent=data.activity==='travel'?'■ STOP TRAVEL':'🚚 TRAVEL';document.getElementById('downtimeButton').textContent=data.activity==='downtime'?'■ STOP DOWNTIME':'🔧 DOWNTIME';document.getElementById('downtimeEditor').style.display=data.activity==='downtime'?'block':'none';
+const ta=document.getElementById('downNote');if(document.activeElement!==ta)ta.value=data.activityNote;
+document.getElementById('category').value=data.category;const model=document.getElementById('model');if(document.activeElement!==model)model.value=data.model;const rate=document.getElementById('rate');if(document.activeElement!==rate)rate.value=data.rate;document.getElementById('payEnd').value=data.payEnd;
+const log=document.getElementById('log');log.replaceChildren();data.events.slice(-15).reverse().forEach(e=>{const div=document.createElement('div');div.className='entry';div.textContent=new Date(e.at).toLocaleString()+' · '+e.kind;log.append(div)});if(!data.events.length)log.textContent='No activity yet.';
+if(document.activeElement?.tagName!=='TEXTAREA')renderDaily();renderReport()}
+function renderDaily(){const root=document.getElementById('dailyRecords');root.replaceChildren();const days=Object.keys(data.days).sort().reverse().slice(0,14);for(const day of days){const r=data.days[day],box=document.createElement('div');box.className='entry';const h=document.createElement('strong');h.textContent=day+' · Paid '+hrs(r.paid)+'h · Machine '+hrs(r.machine)+'h · Travel '+hrs(r.travel)+'h · Down '+hrs(r.downtime)+'h';box.append(h);for(const n of r.notes||[]){const lab=document.createElement('label');lab.textContent='Downtime '+new Date(n.start).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+' · Edit note';const input=document.createElement('textarea');input.value=n.text;input.addEventListener('change',()=>updateNote(day,n.id,input.value));box.append(lab,input)}root.append(box)}if(!days.length)root.textContent='No daily records yet.'}
+function period(){const end=new Date((data.payEnd||'2026-11-07')+'T12:00:00');if(isNaN(end.getTime()))return null;const start=new Date(end);start.setDate(start.getDate()-13);return {start,end}}
+function reportData(){const p=period();if(!p)return null;const rows=[];for(let i=0;i<14;i++){const dt=new Date(p.start);dt.setDate(dt.getDate()+i);const key=dateKey(dt),r={...(data.days[key]||{paid:0,machine:0,travel:0,downtime:0,notes:[]})};if(key===dateKey(Date.now())){const current=currentTotals();Object.assign(r,current)}rows.push({key,...r})}return {p,rows}}
+function reportText(){const x=reportData();if(!x)return '';const sum=x.rows.reduce((a,r)=>a+r.paid,0);return 'Winston Work Clock timesheet\n'+(data.employee||'Employee')+'\nPeriod: '+dateKey(x.p.start)+' to '+dateKey(x.p.end)+'\nTotal paid hours: '+hrs(sum)+'\nTravel: '+hrs(x.rows.reduce((a,r)=>a+r.travel,0))+' h; Machine: '+hrs(x.rows.reduce((a,r)=>a+r.machine,0))+' h; Downtime: '+hrs(x.rows.reduce((a,r)=>a+r.downtime,0))+' h\nDaily hours:\n'+x.rows.map(r=>r.key+': '+hrs(r.paid)+' h').join('\n')}
+function renderReport(){const x=reportData(),root=document.getElementById('report');if(!x)return;const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const sums=['paid','travel','machine','downtime'].map(k=>x.rows.reduce((a,r)=>a+r[k],0));root.innerHTML='<h2>WINSTON WORK CLOCK · TIMESHEET</h2><p><b>Employee:</b> '+esc(data.employee||'Not set')+'<br><b>Pay period:</b> '+dateKey(x.p.start)+' to '+dateKey(x.p.end)+'</p><table><thead><tr><th>Date</th><th>Paid</th><th>Travel</th><th>Machine</th><th>Down</th><th>Other</th></tr></thead><tbody>'+x.rows.map(r=>'<tr><td>'+r.key+'</td><td>'+hrs(r.paid)+'</td><td>'+hrs(r.travel)+'</td><td>'+hrs(r.machine)+'</td><td>'+hrs(r.downtime)+'</td><td>'+hrs(Math.max(0,r.paid-r.travel-r.machine-r.downtime))+'</td></tr>').join('')+'<tr class="totals"><td>TOTAL</td>'+sums.map(v=>'<td>'+hrs(v)+'</td>').join('')+'<td>'+hrs(Math.max(0,sums[0]-sums[1]-sums[2]-sums[3]))+'</td></tr></tbody></table><p><b>Equipment:</b> '+esc(data.category)+' · '+esc(data.model)+'</p><h3>Downtime notes</h3>'+(x.rows.flatMap(r=>(r.notes||[]).map(n=>'<div class="noteitem">'+r.key+' · '+esc(n.text||'(No note entered)')+'</div>')).join('')||'<p class="muted">No downtime notes recorded.</p>')+'<p style="margin-top:25px">Employee: _____________________ &nbsp; Supervisor: _____________________</p><p class="muted" style="font-size:11px">Generated '+new Date().toLocaleString()+'. Review against official records before payroll submission.</p>'}
+function emailReport(){const subject='Timesheet '+(data.employee||'')+' '+(data.payEnd||'');const body=reportText()+'\n\nFull PDF can be provided separately.';location.href='mailto:'+encodeURIComponent(data.email||'')+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body)}
+function smsReport(){const text=reportText();location.href='sms:'+encodeURIComponent(data.phone||'')+'?body='+encodeURIComponent(text)}
+async function shareReport(){const t=reportText();if(navigator.share){try{await navigator.share({title:'Winston Work Clock Timesheet',text:t});return}catch(e){if(e.name==='AbortError')return}}if(navigator.clipboard){try{await navigator.clipboard.writeText(t);alert('Timesheet summary copied. Paste it into your messaging app.');return}catch(e){}}alert('Use Email Summary, Text Summary, or Print / Save PDF.')}
+function exportCSV(){settle();const rows=[['Date','Paid hours','Travel hours','Machine hours','Downtime hours','Other paid hours','Downtime notes'],...Object.keys(data.days).sort().map(k=>{const r=data.days[k];return [k,hrs(r.paid),hrs(r.travel),hrs(r.machine),hrs(r.downtime),hrs(Math.max(0,r.paid-r.travel-r.machine-r.downtime)),(r.notes||[]).map(n=>n.text).join(' | ')]})];const csv=rows.map(row=>row.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\r\n');const a=document.createElement('a'),url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.href=url;a.download='winston-work-clock-v04-daily.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);render()}
+function sky(){let h=new Date().getHours(),mode=h<5||h>=21?'night':h<9?'dawn':h<17?'day':'dusk',colors={night:['#081324','#182b45','#2c3a53'],dawn:['#1b2747','#ad5b66','#efae65'],day:['#347eaf','#7ab8d8','#d4e7ef'],dusk:['#202846','#a74c61','#e99e60']}[mode];['sky1','sky2','sky3'].forEach((id,i)=>document.getElementById(id).setAttribute('stop-color',colors[i]));document.getElementById('sun').setAttribute('cy',mode==='dawn'?240:mode==='dusk'?270:110);document.getElementById('sun').setAttribute('fill',mode==='night'?'#f2f2db':'#ffe1a0');document.getElementById('stars').style.opacity=mode==='night'?'1':'0';document.getElementById('lights').style.opacity=mode==='day'?'0':'1'}
+document.getElementById('employee').value=data.employee;document.getElementById('recipientEmail').value=data.email;document.getElementById('recipientPhone').value=data.phone;sky();render();setInterval(render,1000);setInterval(sky,60000);
 </script></body></html>
