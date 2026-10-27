@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Winston Work Clock</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 22px;
+  background: #101318;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  color: #ffcb27;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+h1 { margin-top: 35px; }
+small { color: #aeb4be; }
+.card {
+  background: #1d222b;
+  border: 1px solid #343a45;
+  border-radius: 20px;
+  padding: 24px;
+  margin-top: 22px;
+  text-align: center;
+}
+.label {
+  font-size: 13px;
+  color: #aeb4be;
+  letter-spacing: 2px;
+}
+.timer {
+  font-size: 48px;
+  font-weight: bold;
+  color: #ffcb27;
+  margin: 24px 0;
+  font-variant-numeric: tabular-nums;
+}
+.status {
+  color: #80df9a;
+  margin-bottom: 20px;
+}
+button {
+  display: block;
+  width: 100%;
+  padding: 18px;
+  margin-top: 12px;
+  background: #ffcb27;
+  color: #111;
+  border: none;
+  border-radius: 13px;
+  font-size: 17px;
+  font-weight: bold;
+}
+.secondary {
+  background: #343a45;
+  color: white;
+}
+.log {
+  text-align: left;
+  line-height: 2;
+  font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">W / WORK CLOCK</div>
+  <small>VERSION 0.1</small>
+</header>
+
+<h1>Good day, Operator.</h1>
+<small>Track your time. Own your day.</small>
+
+<div class="card">
+  <div class="label">TODAY'S WORK TIME</div>
+  <div class="timer" id="timer">00:00:00</div>
+  <div class="status" id="status">
+    Ready to clock in
+  </div>
+  <button id="action" onclick="toggleClock()">
+    START WORK
+  </button>
+  <button class="secondary" onclick="resetClock()">
+    RESET TODAY
+  </button>
+</div>
+
+<div class="card">
+  <div class="label">ACTIVITY LOG</div>
+  <div class="log" id="log">
+    No activity recorded yet.
+  </div>
+</div>
+
+<script>
+const key = "winston-clock-v1";
+let data;
+
+try {
+  data = JSON.parse(localStorage.getItem(key)) || {
+    started: null,
+    elapsed: 0,
+    events: []
+  };
+} catch (e) {
+  data = { started: null, elapsed: 0, events: [] };
+}
+
+function save() {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+function format(ms) {
+  let s = Math.floor(ms / 1000);
+  return [
+    Math.floor(s / 3600),
+    Math.floor((s % 3600) / 60),
+    s % 60
+  ].map(x => String(x).padStart(2, "0")).join(":");
+}
+
+function render() {
+  let ms = data.elapsed +
+    (data.started ? Math.max(0, Date.now() - data.started) : 0);
+
+  document.getElementById("timer").textContent = format(ms);
+  document.getElementById("status").textContent =
+    data.started ? "● Work clock running" : "Ready / clock stopped";
+  document.getElementById("action").textContent =
+    data.started ? "STOP WORK" : "START WORK";
+
+  const log = document.getElementById("log");
+  log.replaceChildren();
+
+  if (!data.events.length) {
+    log.textContent = "No activity recorded yet.";
+  } else {
+    data.events.slice().reverse().forEach(event => {
+      const line = document.createElement("div");
+      line.textContent = event;
+      log.appendChild(line);
+    });
+  }
+}
+
+function toggleClock() {
+  const now = Date.now();
+
+  if (data.started) {
+    data.elapsed += Math.max(0, now - data.started);
+    data.started = null;
+    data.events.push("Stopped: " + new Date(now).toLocaleString());
+  } else {
+    data.started = now;
+    data.events.push("Started: " + new Date(now).toLocaleString());
+  }
+
+  save();
+  render();
+}
+
+function resetClock() {
+  if (!confirm("Clear this demo timer and activity log?")) return;
+  data = { started: null, elapsed: 0, events: [] };
+  save();
+  render();
+}
+
+render();
+setInterval(render, 1000);
+</script>
+
+</body>
+</html>
