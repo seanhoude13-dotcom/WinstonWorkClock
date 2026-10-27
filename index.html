@@ -1,120 +1,109 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Winston Work Clock</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Winston Work Clock v0.3</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#0b1117;color:#fff;font-family:Arial,sans-serif}
-main{max-width:650px;margin:auto;padding:18px}
-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
-.brand{color:#ffcc29;font-size:18px;font-weight:900;letter-spacing:1px}
-.muted{color:#aebcc7;font-size:12px}
-.scene{position:relative;border-radius:20px;overflow:hidden;border:1px solid #46535f;min-height:450px;background:#162b40}
-.scene svg{position:absolute;inset:0;width:100%;height:100%}
-.content{position:relative;z-index:1;padding:17px;display:flex;min-height:450px;flex-direction:column;justify-content:space-between}
-.panel{border-radius:17px;padding:20px;background:#111d28dd;border:1px solid #77818a66;backdrop-filter:blur(4px)}
-.label{color:#c5d1da;font-size:12px;letter-spacing:2px}
-.timer{font-size:clamp(42px,10vw,68px);font-weight:900;margin:14px 0;font-variant-numeric:tabular-nums}
-.track{height:12px;background:#3c4650;border-radius:20px;overflow:hidden}
-.fill{height:100%;width:0;background:#ffcc29}
-.status{margin:12px 0;color:#9ae8b0;font-size:13px;font-weight:bold}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
-.stat{background:#0d1720;padding:12px;border-radius:10px}
-.stat strong{display:block;color:#ffcc29;font-size:22px;margin-top:6px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-button{border:0;border-radius:12px;padding:17px 10px;font-weight:900;font-size:16px}
-.primary{background:#ffcc29;color:#141414}.secondary{background:#36434e;color:white}
-.card{background:#19232e;border:1px solid #44515d;border-radius:16px;padding:17px;margin-top:15px}
-select{width:100%;padding:13px;margin-top:10px;background:#0d1720;border:1px solid #65717d;border-radius:10px;color:white;font-size:16px}
-.entry{padding:10px 0;border-bottom:1px solid #394651;color:#dce5eb;font-size:13px}
-.note{color:#aebcc7;font-size:12px;line-height:1.5}
-</style>
-</head>
-<body><main>
-<header><div class="brand">W / WINSTON WORK CLOCK</div><div class="muted">OPERATOR DISPLAY · V0.2</div></header>
-<div class="scene">
-<svg viewBox="0 0 420 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-<defs><linearGradient id="sky" x2="0" y2="1"><stop id="sky1" offset="0%" stop-color="#0a1529"/><stop id="sky2" offset="55%" stop-color="#263a57"/><stop id="sky3" offset="100%" stop-color="#a75b50"/></linearGradient>
-<radialGradient id="glow"><stop stop-color="#ffe2a1" stop-opacity=".6"/><stop offset="1" stop-color="#ffe2a1" stop-opacity="0"/></radialGradient></defs>
-<rect width="420" height="480" fill="url(#sky)"/>
-<circle id="halo" cx="324" cy="115" r="95" fill="url(#glow)"/>
-<circle id="sun" cx="324" cy="115" r="20" fill="#ffe0a0"/>
-<g id="stars" fill="white"><circle cx="40" cy="32" r="1.5"/><circle cx="95" cy="70" r="1"/><circle cx="167" cy="24" r="1.5"/><circle cx="243" cy="61" r="1"/><circle cx="388" cy="40" r="1.4"/></g>
-<path d="M0 300L55 225L112 275L175 200L250 280L318 218L420 285V480H0Z" fill="#203642" opacity=".7"/>
-<path d="M0 345L73 270L144 320L216 258L296 330L363 268L420 315V480H0Z" fill="#142c34"/>
-<g fill="#0b2027">
-<path d="M25 300l-30 55h16l-28 51h80l-27-51h17z"/>
-<path d="M90 320l-25 45h14l-22 45h70l-24-45h14z"/>
-<path d="M355 300l-32 58h18l-28 53h86l-29-53h18z"/>
-<path d="M410 318l-25 47h14l-25 48h70l-22-48h14z"/>
-</g>
-<!-- Original stylized tracked excavator, not an equipment manufacturer logo -->
-<g fill="#08151c" stroke="#08151c" stroke-linejoin="round">
-<rect x="100" y="405" width="166" height="29" rx="15"/>
-<path d="M120 401v-49h89l34 49z"/>
-<path d="M166 354v-58h48l31 58z"/>
-<path d="M235 347l62-67 17 13-61 79z"/>
-<path d="M302 284l57 60-15 15-58-62z"/>
-<path d="M352 348l21 43-16 8-21-43z"/>
-<path d="M357 388l31 7-11 17-25-8z"/>
-</g>
-<g id="lights"><path d="M248 375l155 18-5 70-150-73z" fill="#fff4b0" opacity=".25"/><circle cx="249" cy="381" r="5" fill="#fff4b0"/></g>
-</svg>
-<div class="content">
-<div class="panel">
-<div class="label">TODAY'S WORK TIME</div>
-<div class="timer" id="timer">00:00:00</div>
-<div class="track"><div class="fill" id="fill"></div></div>
-<div class="status" id="status">READY TO CLOCK IN</div>
-<div class="stats"><div class="stat"><span class="muted">EQUIPMENT</span><strong id="selected">CAT 538</strong></div>
-<div class="stat"><span class="muted">EST. GROSS ($37/HR)</span><strong id="pay">$0.00</strong></div></div>
+*{box-sizing:border-box}body{margin:0;background:#0b1219;color:#f5f7fa;font:16px Arial,sans-serif}main{max-width:680px;margin:auto;padding:16px}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.brand{font-weight:900;color:#ffcd29;letter-spacing:1px}.small{font-size:12px;color:#bac7d1}
+.scene{position:relative;border-radius:20px;overflow:hidden;border:1px solid #566674;background:#132434}
+.scenery{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scenecontent{position:relative;padding:16px;background:linear-gradient(180deg,#0b1420a8,#0b1420a1)}
+.panel{background:#101c28e8;border:1px solid #6b7c8866;border-radius:16px;padding:16px;backdrop-filter:blur(4px)}
+.heading{font-size:12px;color:#c5d2db;letter-spacing:1.5px;font-weight:bold}.gauges{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.gauge{background:#1a2833e8;border:1px solid #54636e;border-radius:14px;padding:10px 5px;text-align:center}
+.gauge svg{display:block;width:100%;max-width:225px;margin:auto}.gauge .value{font-weight:900;font-size:clamp(17px,4.4vw,29px);font-variant-numeric:tabular-nums;margin-top:-8px}.gauge .name{font-size:11px;color:#c0ced8;letter-spacing:1px;margin-top:7px}
+.earnings{margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;background:#0c1823;border:1px solid #52616c;border-radius:13px;padding:13px}
+.money{font-size:clamp(25px,6vw,38px);font-weight:900;color:#ffcd29;font-variant-numeric:tabular-nums}.moneybar{height:6px;background:#3b4a54;border-radius:8px;overflow:hidden;margin-top:6px}.moneybar>div{height:100%;background:#ffcd29;width:0}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}button{cursor:pointer;border:0;border-radius:13px;padding:14px 8px;font-weight:900;font-size:15px;min-height:54px}
+.yellow{background:#ffcd29;color:#111923}.dark{background:#344551;color:#fff}.machinebtn{width:100%;margin-top:12px;background:#ffcd29;color:#121b22;display:flex;align-items:center;justify-content:center;gap:10px}
+.machinebtn.running{background:#a5e6b5}.machinebtn svg{width:65px;height:43px;flex:none}
+.card{background:#192631;border:1px solid #4d5c68;border-radius:16px;padding:16px;margin-top:14px}
+label{display:block;color:#c7d2da;font-size:12px;letter-spacing:1px;margin-bottom:7px}
+select,input{width:100%;border:1px solid #61717e;border-radius:10px;background:#0d1822;color:#fff;padding:13px;font-size:16px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.row button{min-height:38px;padding:9px 12px;font-size:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.entry{border-top:1px solid #3d4b55;padding:10px 0;font-size:13px;color:#d8e4eb}.note{font-size:12px;line-height:1.5;color:#b1bec9}
+.badge{color:#a7edbb;font-size:12px;font-weight:bold}h2{font-size:17px;margin:0 0 12px}
+</style></head><body><main>
+<header><div class="brand">W / WINSTON WORK CLOCK</div><div class="small">OPERATOR DISPLAY · V0.3</div></header>
+<section class="scene"><svg class="scenery" viewBox="0 0 420 580" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<defs><linearGradient id="sky" x2="0" y2="1"><stop id="sky1" offset="0%" stop-color="#081324"/><stop id="sky2" offset="55%" stop-color="#182b45"/><stop id="sky3" offset="100%" stop-color="#2c3a53"/></linearGradient></defs>
+<rect width="420" height="580" fill="url(#sky)"/><circle id="sun" cx="330" cy="120" r="23" fill="#f2f2db"/>
+<g id="stars" fill="#fff"><circle cx="40" cy="32" r="1.5"/><circle cx="95" cy="70" r="1"/><circle cx="167" cy="24" r="1.5"/><circle cx="243" cy="61" r="1"/><circle cx="388" cy="40" r="1.4"/></g>
+<path d="M0 365L60 290L120 335L175 268L260 350L326 280L420 347V580H0Z" fill="#1a3440" opacity=".8"/>
+<path d="M0 435L65 355L145 411L214 335L300 423L366 352L420 412V580H0Z" fill="#102b32"/>
+<g fill="#081f25"><path d="M20 355l-28 65h15l-26 54h78l-26-54h15z"/><path d="M95 390l-27 58h16l-23 52h72l-23-52h15z"/><path d="M353 355l-30 65h16l-25 54h83l-27-54h16z"/><path d="M412 385l-28 65h16l-25 54h78l-25-54h16z"/></g>
+<g fill="#07151d"><rect x="105" y="506" width="170" height="27" rx="14"/><path d="M121 503v-44h91l31 44z"/><path d="M164 459v-59h48l31 59z"/><path d="M234 451l62-70 17 13-61 78z"/><path d="M302 384l58 61-15 14-59-62z"/><path d="M352 450l21 43-16 8-21-43z"/></g>
+<g id="lights"><path d="M247 480l160 10-10 70-150-64z" fill="#fff2a6" opacity=".3"/><circle cx="247" cy="482" r="5" fill="#fff2a6"/></g></svg>
+<div class="scenecontent"><div class="panel">
+<div class="heading">TODAY'S INSTRUMENTS</div>
+<div class="gauges">
+<div class="gauge"><svg viewBox="0 0 200 118"><path d="M23 98 A77 77 0 0 1 177 98" fill="none" stroke="#3a4a55" stroke-width="15" stroke-linecap="round"/><path id="paidArc" d="M23 98 A77 77 0 0 1 177 98" fill="none" stroke="#ffcd29" stroke-width="15" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100"/><text x="100" y="112" fill="#c1cdd5" font-size="11" text-anchor="middle">0 — 16 HOURS</text></svg><div class="value" id="paidTime">00:00:00</div><div class="name">PAID TIME</div></div>
+<div class="gauge"><svg viewBox="0 0 200 118"><path d="M23 98 A77 77 0 0 1 177 98" fill="none" stroke="#3a4a55" stroke-width="15" stroke-linecap="round"/><path id="machineArc" d="M23 98 A77 77 0 0 1 177 98" fill="none" stroke="#76c9e8" stroke-width="15" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100"/><text x="100" y="112" fill="#c1cdd5" font-size="11" text-anchor="middle">0 — 16 HOURS</text></svg><div class="value" id="machineTime">00:00:00</div><div class="name">MACHINE TIME</div></div>
 </div>
-<div class="actions"><button class="primary" id="action" onclick="toggleClock()">START WORK</button><button class="secondary" onclick="resetClock()">RESET DEMO</button></div>
-</div></div>
-<div class="card"><div class="label">SELECT EQUIPMENT</div>
-<select id="machine" onchange="chooseMachine(this.value)">
-<option>CAT 538</option><option>CAT 320</option><option>Komatsu HM300</option><option>Wheel Loader</option><option>Other</option>
-</select></div>
-<div class="card"><div class="label">ACTIVITY LOG</div><div id="log" class="muted" style="margin-top:10px">No activity yet.</div></div>
-<p class="note">The background changes with your device's time of day. This is a manual timer demo, not automatic GPS tracking. Data stays in this browser. Keep separate official payroll records while testing.</p>
-</main>
-<script>
-const key="winston-clock-v1"; // Keep the previous version's timer data
-let data;try{data=JSON.parse(localStorage.getItem(key))}catch(e){}
-if(!data||typeof data!=="object")data={started:null,elapsed:0,events:[]};
-data.started=Number(data.started)||null;
-data.elapsed=Number(data.elapsed)||0;
-data.events=Array.isArray(data.events)?data.events:[];
-data.machine=data.machine||"CAT 538";
-function save(){localStorage.setItem(key,JSON.stringify(data))}
-function format(ms){let s=Math.floor(ms/1000);return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(n=>String(n).padStart(2,"0")).join(":")}
-function render(){
-let ms=data.elapsed+(data.started?Math.max(0,Date.now()-data.started):0);
-document.getElementById("timer").textContent=format(ms);
-document.getElementById("fill").style.width=Math.min(100,ms/57600000*100)+"%";
-document.getElementById("status").textContent=data.started?"● CLOCK RUNNING":"READY / CLOCK STOPPED";
-document.getElementById("action").textContent=data.started?"STOP WORK":"START WORK";
-document.getElementById("selected").textContent=data.machine;
-document.getElementById("machine").value=data.machine;
-document.getElementById("pay").textContent="$"+(ms/3600000*37).toFixed(2);
+<div class="earnings"><div style="flex:1"><div class="heading">LIVE ESTIMATED GROSS</div><div class="money" id="earnings">••••••</div><div class="moneybar"><div id="moneyFill"></div></div></div><button class="dark" id="privacy" onclick="togglePrivacy()" aria-label="Toggle earnings visibility">SHOW</button></div>
+<div class="row" style="margin-top:13px"><span class="badge" id="status">● CLOCK STOPPED</span><span class="small" id="machineName">Processor</span></div>
+</div>
+<div class="controls"><button class="yellow" id="paidButton" onclick="togglePaid()">START PAID TIME</button><button class="dark" onclick="resetDay()">RESET DEMO</button></div>
+<button class="machinebtn" id="machineButton" onclick="toggleMachine()"><svg viewBox="0 0 100 60" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"><rect x="5" y="45" width="49" height="11" rx="5"/><path d="M12 45V27H45L54 45M24 27V10H41L49 27M52 33L70 8L78 13L60 39M74 11L90 32L83 38L68 20M87 35L94 48L87 52"/></svg><span id="machineButtonText">START MACHINE TIME</span></button>
+</div></section>
+<section class="card"><h2>Equipment</h2><label for="category">Machine category</label><select id="category" onchange="changeCategory(this.value)">
+<option>Feller Buncher</option><option>Skidder</option><option>Front-End Loader</option><option>Bulldozer</option><option>Excavator</option><option>Processor</option><option>Log Loader</option></select>
+<label for="model" style="margin-top:12px">Machine model (optional)</label><input id="model" placeholder="e.g. CAT 538" maxlength="70" onchange="changeModel(this.value)"></section>
+<section class="card"><h2>Private Pay Settings</h2><div class="grid"><div><label for="rate">Hourly wage (CAD)</label><input id="rate" type="number" min="0" max="1000" step=".01" value="0" onchange="changeRate(this.value)"></div><div><label for="payEnd">Pay period ending</label><input id="payEnd" type="date" value="2026-11-07" onchange="changePayEnd(this.value)"></div></div>
+<p class="note">Earnings are hidden on the dashboard by default. Pay rate is stored only in this browser, not in the public website code. Anyone with access to this device/browser may still inspect stored data.</p></section>
+<section class="card"><div class="row"><h2>Activity Log</h2><button class="dark" onclick="exportCSV()">EXPORT CSV</button></div><div id="log" class="small">No activity yet.</div></section>
+<p class="note">Prototype for field testing, not an official payroll record. No GPS or cloud sync yet. Browser data can be lost if storage is cleared. Existing V0.2 timer data is kept separately and is not included in V0.3 totals. Review exported records before sending.</p>
+</main><script>
+const KEY="winston-clock-v3";
+const defaults=()=>({day:new Date().toLocaleDateString("en-CA"),paidStart:null,paidMs:0,machineStart:null,machineMs:0,category:"Processor",model:"CAT 538",rate:0,payEnd:"2026-11-07",events:[]});
+let data;try{data=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!data||typeof data!=="object")data=defaults();
+data={...defaults(),...data};if(!Array.isArray(data.events))data.events=[];
+let reveal=false;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert("Unable to save data. Check browser storage.")}}
+function dayKey(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")}
+function logEvent(kind,at=Date.now()){data.events.push({kind,at,category:data.category,model:data.model});save()}
+function ensureDay(){const now=dayKey();if(data.day===now)return;
+ // Close active intervals at local midnight; restart them for the new day.
+ let boundary=new Date(now+"T00:00:00").getTime();
+ if(data.paidStart){data.paidMs+=Math.max(0,boundary-data.paidStart);data.paidStart=boundary}
+ if(data.machineStart){data.machineMs+=Math.max(0,boundary-data.machineStart);data.machineStart=boundary}
+ data.day=now;data.paidMs=0;data.machineMs=0;save()}
+function msFor(type){return data[type+"Ms"]+(data[type+"Start"]?Math.max(0,Date.now()-data[type+"Start"]):0)}
+function time(ms){let s=Math.floor(ms/1000);return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(n=>String(n).padStart(2,"0")).join(":")}
+function togglePaid(){ensureDay();let now=Date.now();if(data.paidStart){data.paidMs+=Math.max(0,now-data.paidStart);data.paidStart=null;if(data.machineStart){data.machineMs+=Math.max(0,now-data.machineStart);data.machineStart=null;logEvent("Machine stopped",now)}logEvent("Paid time stopped",now)}
+else{data.paidStart=now;logEvent("Paid time started",now)}save();render()}
+function toggleMachine(){ensureDay();let now=Date.now();if(data.machineStart){data.machineMs+=Math.max(0,now-data.machineStart);data.machineStart=null;logEvent("Machine stopped",now)}
+else{if(!data.paidStart){alert("Start paid time first.");return}data.machineStart=now;logEvent("Machine started",now)}save();render()}
+function resetDay(){if(!confirm("Clear today's V0.3 demo timers? Activity log will be kept."))return;data.paidStart=null;data.paidMs=0;data.machineStart=null;data.machineMs=0;logEvent("Today's demo timers reset");render()}
+function changeCategory(x){data.category=x;data.model="";document.getElementById("model").value="";logEvent("Selected "+x);render()}
+function changeModel(x){data.model=x.trim();logEvent("Model: "+(data.model||"not specified"));render()}
+function changeRate(x){let n=Number(x);if(!Number.isFinite(n)||n<0||n>1000){alert("Enter a valid hourly rate.");render();return}data.rate=n;save();render()}
+function changePayEnd(x){data.payEnd=x;save()}
+function togglePrivacy(){reveal=!reveal;render()}
+function render(){ensureDay();let paid=msFor("paid"),machine=msFor("machine");
+document.getElementById("paidTime").textContent=time(paid);document.getElementById("machineTime").textContent=time(machine);
+document.getElementById("paidArc").setAttribute("stroke-dasharray",Math.min(100,paid/57600000*100)+" 100");
+document.getElementById("machineArc").setAttribute("stroke-dasharray",Math.min(100,machine/57600000*100)+" 100");
+document.getElementById("earnings").textContent=reveal?"$"+(paid/3600000*data.rate).toFixed(2):"••••••";
+document.getElementById("moneyFill").style.width=Math.min(100,paid/3600000*data.rate/600*100)+"%";
+document.getElementById("privacy").textContent=reveal?"HIDE":"SHOW";
+document.getElementById("status").textContent=data.paidStart?"● PAID CLOCK RUNNING":"● CLOCK STOPPED";
+document.getElementById("paidButton").textContent=data.paidStart?"STOP PAID TIME":"START PAID TIME";
+document.getElementById("machineButtonText").textContent=data.machineStart?"STOP MACHINE TIME":"START MACHINE TIME";
+document.getElementById("machineButton").classList.toggle("running",!!data.machineStart);
+document.getElementById("machineName").textContent=data.model||data.category;
+document.getElementById("category").value=data.category;document.getElementById("model").value=data.model;
+if(document.activeElement!==document.getElementById("rate"))document.getElementById("rate").value=data.rate;
+document.getElementById("payEnd").value=data.payEnd;
 const log=document.getElementById("log");log.replaceChildren();
 if(!data.events.length)log.textContent="No activity yet.";
-else data.events.slice().reverse().forEach(event=>{let e=document.createElement("div");e.className="entry";e.textContent=event;log.appendChild(e)});
-}
-function toggleClock(){let now=Date.now();if(data.started){data.elapsed+=Math.max(0,now-data.started);data.started=null;data.events.push("Stopped: "+new Date(now).toLocaleString())}
-else{data.started=now;data.events.push("Started: "+new Date(now).toLocaleString())}save();render()}
-function resetClock(){if(!confirm("Clear demo timer and activity history?"))return;data={started:null,elapsed:0,events:[],machine:data.machine};save();render()}
-function chooseMachine(value){data.machine=value;data.events.push("Equipment: "+value+" · "+new Date().toLocaleString());save();render()}
-function updateSky(){
-let hour=new Date().getHours();
-let mode=hour<5||hour>=21?"night":hour<9?"morning":hour<17?"day":"dusk";
-let palette={night:["#081324","#182b45","#2c3a53"],morning:["#1b2747","#ad5b66","#efae65"],day:["#347eaf","#7ab8d8","#d4e7ef"],dusk:["#202846","#a74c61","#e99e60"]}[mode];
-["sky1","sky2","sky3"].forEach((id,i)=>document.getElementById(id).setAttribute("stop-color",palette[i]));
-let y=mode==="morning"?220:mode==="dusk"?255:105;
-document.getElementById("sun").setAttribute("cy",y);document.getElementById("halo").setAttribute("cy",y);
-document.getElementById("sun").setAttribute("fill",mode==="night"?"#e3eaff":"#ffe0a0");
+else data.events.slice(-35).reverse().forEach(e=>{const div=document.createElement("div");div.className="entry";div.textContent=new Date(e.at).toLocaleString()+" · "+e.kind;log.appendChild(div)})}
+function exportCSV(){const rows=[["Timestamp","Activity","Category","Model"],...data.events.map(e=>[new Date(e.at).toISOString(),e.kind,e.category,e.model])];
+const csv=rows.map(row=>row.map(x=>'"'+String(x??"").replaceAll('"','""')+'"').join(",")).join("\r\n");
+const a=document.createElement("a");const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.href=url;a.download="winston-work-clock-activity.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function sky(){let h=new Date().getHours();let mode=h<5||h>=21?"night":h<9?"dawn":h<17?"day":"dusk";
+let colors={night:["#081324","#182b45","#2c3a53"],dawn:["#1b2747","#ad5b66","#efae65"],day:["#347eaf","#7ab8d8","#d4e7ef"],dusk:["#202846","#a74c61","#e99e60"]}[mode];
+["sky1","sky2","sky3"].forEach((id,i)=>document.getElementById(id).setAttribute("stop-color",colors[i]));
+let y=mode==="dawn"?240:mode==="dusk"?270:110;document.getElementById("sun").setAttribute("cy",y);
+document.getElementById("sun").setAttribute("fill",mode==="night"?"#f2f2db":"#ffe1a0");
 document.getElementById("stars").style.opacity=mode==="night"?"1":"0";
-document.getElementById("lights").style.opacity=mode==="day"?"0":"1";
-}
-updateSky();render();setInterval(render,1000);setInterval(updateSky,60000);
+document.getElementById("lights").style.opacity=mode==="day"?"0":"1"}
+sky();render();setInterval(render,1000);setInterval(sky,60000);
 </script></body></html>
